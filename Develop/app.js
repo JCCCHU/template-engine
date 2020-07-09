@@ -13,10 +13,6 @@ const render = require("./lib/htmlRenderer");
 // An array containing completed Employees, in the form of objects.
 const employees = [];
 
-function promptUser(questionSet) {
-  return inquirer.prompt(questionSet);
-}
-
 const initQuestions = [
   {
     type:"input",
@@ -84,18 +80,13 @@ const engineerQuestions = [
   }
 ]
 
-async function init() {
-  console.log("Team Templater 2020");
-  console.log("Welcome, Admin. Please follow the below prompts.");
-  console.log("All teams must have 1 manager, per head office rules.");
-  let initInput = await promptUser(initQuestions);
-  await employeeLoop("Manager",1);
-  await employeeLoop("Engineer",initInput.engineerCount);
-  await employeeLoop("Intern",initInput.internCount);
-  await writeFileAsync(outputPath,render(employees));
-  console.log("Done");
+// Asks a set of Inquirer questions.
+function promptUser(questionSet) {
+  return inquirer.prompt(questionSet);
 }
 
+// Loops through the initialization questions for a given role x times, where
+// x is the number of times specified by the user.
 async function employeeLoop(role,x) {
   let roleQuestions = [];
   switch (role) {
@@ -128,10 +119,22 @@ async function employeeLoop(role,x) {
       default:
         console.log("Error: Role not provided.");
     }
-    console.log(input);
-    console.log(employees);
+    // console.log(input);
+    // console.log(employees);
   }
-  
+}
+
+// Main program
+async function init() {
+  console.log("Team Templater 2020");
+  console.log("Welcome, Admin. Please follow the below prompts.");
+  console.log("Head office requires there be only 1 manager per team.");
+  let initInput = await promptUser(initQuestions);
+  await employeeLoop("Manager",1);
+  await employeeLoop("Engineer",initInput.engineerCount);
+  await employeeLoop("Intern",initInput.internCount);
+  await writeFileAsync(outputPath,render(employees));
+  console.log("HTML rendered.");
 }
 
 init();
