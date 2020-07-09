@@ -1,4 +1,4 @@
-// Class for the base Employee class.
+// Class for the base Employee class. Other employee types extend this one
 
 function Employee(name,id,email) {
   this.name = name;
